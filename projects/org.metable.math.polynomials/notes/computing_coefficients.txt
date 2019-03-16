@@ -1,0 +1,82 @@
+Expanding polynomial factors:
+
+degree = 1: (x + a) = a + x
+degree = 2: (x + a)(x + b) = ab + (a + b)x + x^2 
+degree = 3: (x + a)(x + b)(x + c) = abc + (ab + ac + bc)x + (a + b + c)x^2 + x^3
+degree = 4: (x + a)(x + b)(x + c)(x + d) = abcd + (abc + abd + acd + bcd)x + (ab + ac + ad + bc + bd + cd)x^2 + (a + b + c + d)x^3 + x^4
+
+
+Reorganize and factor terms:
+
+degree = 1: (x + a) =                      a    +                         x
+degree = 2: (x + a)(x + b) =               ab   +              (a + b)    x +                                 x^2 
+degree = 3: (x + a)(x + b)(x + c) =        abc  +        (ab + (a + b)c)  x +                    (a + b + c)  x^2 +                x^3
+degree = 4: (x + a)(x + b)(x + c)(x + d) = abcd + (abc + (ab + (a + b)c)d)x + ((ab + (a + b)c) + (a + b + c)d)x^2 + (a + b + c + d)x^3 + x^4
+
+Put the constant terms in tabular form:
+
+
+
+                                              Coefficient                                        
+         +------+------------------------+--------------------------------+-----------------+---+
+  degree |  1   |           2            |               3                |      4          | 5 |
++--------+------+------------------------+--------------------------------+-----------------+---+
+|   1    | a    | 1                      |                                |                 |   |
++--------+------+------------------------+--------------------------------+-----------------+---+
+|   2    | ab   |             (a + b)    | 1                              |                 |   | 
++--------+------+------------------------+--------------------------------+-----------------+---+
+|   3    | abc  |        ab + (a + b)c   |                   (a + b + c)  | 1               |   |
++--------+------+------------------------+--------------------------------+-----------------+---+
+|   4    | abcd | abc + (ab + (a + b)c)d | (ab + (a + b)c) + (a + b + c)d | (a + b + c + d) | 1 |
++--------+------+------------------------+--------------------------------+-----------------+---+
+
+For degree n, where n >= 1 having n constants [a b c ...]:
+
+Number of coefficients = n + 1
+
+Coefficient[n, 1] = the product of all factor constants (e.g., a, ab, etc...) 
+Coefficient[n, n] = the sum of all factor constants (e.g.e, a + b, a + b + c, etc...)
+Coefficient[n, n + 1] = 1
+
+For each Coefficient[n, i], where i > 1 and i < n:
+
+  Coefficient[n, i] = Coefficient[n - 1, i - 1] + Coefficient[n - 1, i]*constant[n]
+  
+
+Pseudo Code for degree n:
+
+    // Initial conditions.    
+    double[n] constants = a, b, c, ...
+    double[n + 1] result
+    result[0] = 1;
+   
+    // Call the function that computes the result.
+    coefficients(constants, 0, result)
+    
+    
+    function coefficients(double[] constants, int index, double[] result)
+        // Note: degree n = constants.length.
+        if index == constants.length return
+        
+        constant = constants[index]
+       
+        // Compute the coefficients for coefficients index ... 1
+        coefficients(constant, index, result)
+        
+        result[0] = result[0] * constant;
+        result[index + 1] = 1 
+        
+        coefficients(constants, index + 1, result)
+        
+        
+   function coefficients(double constant, int index, double[] result)
+       if index == 0 return
+       
+       result[index] = result[index - 1] + (result[index]*constant)
+       
+       coefficients(constant, index - 1, result)
+        
+    
+    
+
+
